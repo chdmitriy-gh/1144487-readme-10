@@ -1,7 +1,7 @@
 # Личный проект «Readme»
 
 * Студент: [Дмитрий](https://up.htmlacademy.ru/php/10/user/1144487).
-* Наставник: `Jenia Bunos`.
+* Наставник: [Jenia Bunos](https://htmlacademy.ru/profile/id1092709).
 
 ---
 

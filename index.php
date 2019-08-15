@@ -2,24 +2,27 @@
 $is_auth = rand(0, 1);
 $user_name = 'Дмитрий'; // укажите здесь ваше имя
 
-function cut_text($text, $cut_limit=300) {
+function format_text($text, $cut_limit=300) { // функция форматирования текста перед выводом
     $output = '';
+    
     if (mb_strlen($text) < $cut_limit) {
-        $output = '<p>' . $text . '</p>';
-    } else {
-        $text_array = explode(' ', $text); // исходная строка в виде массива слов
-        $output_array = []; // результирующий массив слов
-        $index = 0; // индекс для цикла
-        $cur_len = 0; // текущая суммарная длина строки
-        while ($cur_len + mb_strlen($text_array[$index]) < $cut_limit + 1) {
-            $output_array[] = $text_array[$index];
-            $cur_len = $cur_len + mb_strlen($text_array[$index]) + 1;
-            $index++;
-        }
-        $output = implode(' ', $output_array) . '...';
-        $output = '<p>' . $output . '</p>';
-        $output = $output . '<a class="post-text__more-link" href="#">Читать далее</a>';
+        $output = sprintf('<p>%s</p>', $text);
     }
+
+    else {
+        $text_array = explode(' ', $text); 
+        $output_array = []; 
+        $index = 0; 
+        $cur_len = mb_strlen($text_array[0]); 
+     
+        while ($cur_len++ <= $cut_limit) {
+            $output_array[] = $text_array[$index];
+            $cur_len += mb_strlen($text_array[++$index]);            
+        }
+        
+        $output = sprintf('<p>%s...</p><a class="post-text__more-link" href="#">Читать далее</a>', implode(' ', $output_array));
+    }
+
     return $output; 
 }
 
@@ -273,12 +276,14 @@ $cards = [
         </div>
 
         <div class="popular__posts">        
+            
             <?php foreach ($cards as $card): ?>    
             <article class="popular__post post <?=$card['type'];?>"> 
                 <header class="post__header">
                     <h2><?=$card['header'];?></h2>
                 </header>
                 <div class="post__main">
+
                     <?php if ($card['type'] === 'post-quote'): ?>
                         <blockquote>
                             <p>
@@ -286,12 +291,15 @@ $cards = [
                             </p>
                             <cite>Неизвестный Автор</cite>
                         </blockquote>    
+                    
                     <?php elseif($card['type'] === 'post-text'): ?> 
-                        <p><?=cut_text($card['content']);?></p>   
+                        <p><?=format_text($card['content']);?></p>   
+                    
                     <?php elseif($card['type'] === 'post-photo'): ?> 
                         <div class="post-photo__image-wrapper">
                             <img src="img/<?=$card['content'];?>" alt="Фото от пользователя" width="360" height="240">
                         </div>
+                    
                     <?php elseif($card['type'] === 'post-link'): ?>
                         <div class="post-link__wrapper">
                             <a class="post-link__external" href="http://" title="Перейти по ссылке">
@@ -307,6 +315,7 @@ $cards = [
                             </a>
                         </div>
                     <?php endif; ?>
+                
                 </div>
                 <footer class="post__footer">
                     <div class="post__author">
@@ -344,6 +353,7 @@ $cards = [
                 </footer>
             </article> 
             <?php endforeach; ?> 
+
        </div>
     </div>
 </section>

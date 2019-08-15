@@ -2,7 +2,10 @@
 $is_auth = rand(0, 1);
 $user_name = 'Дмитрий'; // укажите здесь ваше имя
 
-function format_text($text, $cut_limit=300) { // функция форматирования текста перед выводом
+/**
+ * функция форматирования текста перед выводом
+ **/
+function format_text($text, $cut_limit=300) {
     $output = '';
     
     if (mb_strlen($text) < $cut_limit) {
@@ -20,7 +23,10 @@ function format_text($text, $cut_limit=300) { // функция форматир
             $cur_len += mb_strlen($text_array[++$index]);            
         }
         
-        $output = sprintf('<p>%s...</p><a class="post-text__more-link" href="#">Читать далее</a>', implode(' ', $output_array));
+        $output = sprintf(
+            '<p>%s...</p><a class="post-text__more-link" href="#">Читать далее</a>', 
+            implode(' ', $output_array)
+        );
     }
 
     return $output; 

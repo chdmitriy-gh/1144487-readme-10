@@ -11,7 +11,6 @@ function format_text($text, $cut_limit=300) {
     if (mb_strlen($text) < $cut_limit) {
         $output = sprintf('<p>%s</p>', $text);
     }
-
     else {
         $text_array = explode(' ', $text); 
         $output_array = []; 
@@ -296,16 +295,13 @@ $cards = [
                                 <?=$card['content'];?>
                             </p>
                             <cite>Неизвестный Автор</cite>
-                        </blockquote>    
-                    
+                        </blockquote>                     
                     <?php elseif($card['type'] === 'post-text'): ?> 
-                        <p><?=format_text($card['content']);?></p>   
-                    
+                        <p><?=format_text($card['content']);?></p>                       
                     <?php elseif($card['type'] === 'post-photo'): ?> 
                         <div class="post-photo__image-wrapper">
                             <img src="img/<?=$card['content'];?>" alt="Фото от пользователя" width="360" height="240">
-                        </div>
-                    
+                        </div>                    
                     <?php elseif($card['type'] === 'post-link'): ?>
                         <div class="post-link__wrapper">
                             <a class="post-link__external" href="http://" title="Перейти по ссылке">

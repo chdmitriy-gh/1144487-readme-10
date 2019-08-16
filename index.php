@@ -10,8 +10,7 @@ function format_text($text, $cut_limit=300) {
     
     if (mb_strlen($text) < $cut_limit) {
         $output = sprintf('<p>%s</p>', $text);
-    }
-    else {
+    } else {
         $text_array = explode(' ', $text); 
         $output_array = []; 
         $index = 0; 

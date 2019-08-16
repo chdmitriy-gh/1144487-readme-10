@@ -2,6 +2,34 @@
 $is_auth = rand(0, 1);
 $user_name = 'Дмитрий'; // укажите здесь ваше имя
 
+/**
+ * функция форматирования текста перед выводом
+ **/
+function format_text($text, $cut_limit=300) {
+    $output = '';
+    
+    if (mb_strlen($text) < $cut_limit) {
+        $output = sprintf('<p>%s</p>', $text);
+    } else {
+        $text_array = explode(' ', $text); 
+        $output_array = []; 
+        $index = 0; 
+        $cur_len = mb_strlen($text_array[0]); 
+     
+        while ($cur_len++ <= $cut_limit) {
+            $output_array[] = $text_array[$index];
+            $cur_len += mb_strlen($text_array[++$index]);            
+        }
+        
+        $output = sprintf(
+            '<p>%s...</p><a class="post-text__more-link" href="#">Читать далее</a>', 
+            implode(' ', $output_array)
+        );
+    }
+
+    return $output; 
+}
+
 $cards = [
     [
         'header' => 'Цитата',
@@ -23,6 +51,17 @@ $cards = [
         'content' => 'rock-medium.jpg',
         'author-name' => 'Виктор',
         'author-avatar' => 'userpic-mark.jpg'
+    ],
+    [
+        'header' => 'Полезный пост про Байкал',
+        'type' => 'post-text',
+        'content' => 'Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал 
+        считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых
+        Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, –
+        популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и
+        собачьих упряжках.',
+        'author-name' => 'Лариса',
+        'author-avatar' => 'userpic-larisa-small.jpg'
     ],
     [
         'header' => 'Моя мечта',
@@ -241,25 +280,27 @@ $cards = [
         </div>
 
         <div class="popular__posts">        
+            
             <?php foreach ($cards as $card): ?>    
             <article class="popular__post post <?=$card['type'];?>"> 
                 <header class="post__header">
                     <h2><?=$card['header'];?></h2>
                 </header>
                 <div class="post__main">
+
                     <?php if ($card['type'] === 'post-quote'): ?>
                         <blockquote>
                             <p>
                                 <?=$card['content'];?>
                             </p>
                             <cite>Неизвестный Автор</cite>
-                        </blockquote>    
+                        </blockquote>                     
                     <?php elseif($card['type'] === 'post-text'): ?> 
-                        <p><?=$card['content'];?></p>   
+                        <p><?=format_text($card['content']);?></p>                       
                     <?php elseif($card['type'] === 'post-photo'): ?> 
                         <div class="post-photo__image-wrapper">
                             <img src="img/<?=$card['content'];?>" alt="Фото от пользователя" width="360" height="240">
-                        </div>
+                        </div>                    
                     <?php elseif($card['type'] === 'post-link'): ?>
                         <div class="post-link__wrapper">
                             <a class="post-link__external" href="http://" title="Перейти по ссылке">
@@ -275,6 +316,7 @@ $cards = [
                             </a>
                         </div>
                     <?php endif; ?>
+                
                 </div>
                 <footer class="post__footer">
                     <div class="post__author">
@@ -312,6 +354,7 @@ $cards = [
                 </footer>
             </article> 
             <?php endforeach; ?> 
+
        </div>
     </div>
 </section>

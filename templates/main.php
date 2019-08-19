@@ -114,7 +114,7 @@
                                     <img src="https://www.google.com/s2/favicons?domain=vitadental.ru" alt="Иконка">
                                 </div>
                                 <div class="post-link__info">
-                                    <h3><?=$card['header'];?></h3>
+                                    <h3><?=strip_tags($card['header']);?></h3>
                                 </div>
                             </div>
                             <span><?=$card['content'];?></span>

@@ -1,5 +1,6 @@
 <?php
 require_once('helpers.php');
+date_default_timezone_set('Europe/Moscow');
 
 $is_auth = rand(0, 1);
 $user_name = 'Дмитрий'; // укажите здесь ваше имя
@@ -31,6 +32,44 @@ function format_text($text, $cut_limit=300) {
     }
 
     return $output; 
+}
+
+/**
+* Функция форматирования даты поста
+**/
+function format_date($date) {
+    $dt_date = date_create($date);
+    $dt_now = date_create('now');
+    $dt_diff = date_diff($dt_date, $dt_now);
+    
+    $days_intrv = date_interval_format($dt_diff, '%a');
+    $hours_intrv = date_interval_format($dt_diff, '%h');
+    $minutes_intrv = date_interval_format($dt_diff, '%i');
+
+    if ($days_intrv > 35) {
+        $months_intrv = ceil($days_intrv / 31);
+        $output = $months_intrv . get_noun_plural_form($months_intrv, ' месяц', ' месяца', ' месяцев') . ' назад'; 
+    } elseif ($days_intrv > 7) {
+        $weeks_intrv = ceil($days_intrv / 7);
+        $output = $weeks_intrv . get_noun_plural_form($weeks_intrv, ' неделя', ' недели', ' недель') . ' назад'; 
+    } elseif ($days_intrv >= 1) {
+        $output = $days_intrv . get_noun_plural_form($days_intrv, ' день', ' дня', ' дней') . ' назад';         
+    } elseif ($hours_intrv >= 1) {
+        $output = $hours_intrv . get_noun_plural_form($hours_intrv, ' час', ' часа', ' часов') . ' назад';
+    } else {
+        $output = $minutes_intrv . get_noun_plural_form($minutes_intrv, ' минута', ' минуты', ' минут') . ' назад';
+    }
+
+    return $output;
+}
+
+/**
+* Функция преобразования формата даты для тега title
+**/
+function format_date_title($date) {
+    $dt_date = date_create($date);
+    $output = date_format($dt_date, 'd.m.Y H:i');
+    return $output;
 }
 
 $cards = [
@@ -81,6 +120,10 @@ $cards = [
         'author-avatar' => 'userpic.jpg'
     ]
 ];
+
+foreach ($cards as $key => $value)  {
+    $cards[$key]['date'] = generate_random_date($key);
+}
 
 $page_content = include_template('main.php', ['cards' => $cards]);
 $layout_content = include_template('layout.php', 

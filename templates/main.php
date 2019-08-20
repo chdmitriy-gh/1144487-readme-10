@@ -86,7 +86,7 @@
 
         <div class="popular__posts">        
             
-            <?php foreach ($cards as $card): ?>    
+        <?php foreach ($cards as $card): ?>    
             <article class="popular__post post <?=$card['type'];?>"> 
                 <header class="post__header">
                     <h2><?=strip_tags($card['header']);?></h2>
@@ -131,7 +131,9 @@
                             </div>
                             <div class="post__info">
                                 <b class="post__author-name"><?=$card['author-name'];?></b>
-                                <time class="post__time" datetime="">дата</time>
+                                <time class="post__time" datetime="<?=$card['date'];?>" 
+                                    title="<?=format_date_title($card['date']);?>"> <?=format_date($card['date']);?> 
+                                </time> 
                             </div>
                         </a>
                     </div>
@@ -158,7 +160,7 @@
                     </div>
                 </footer>
             </article> 
-            <?php endforeach; ?> 
+        <?php endforeach; ?> 
 
        </div>
     </div>

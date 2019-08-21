@@ -8,7 +8,8 @@ $user_name = 'Дмитрий'; // укажите здесь ваше имя
 /**
  * функция форматирования текста перед выводом
  **/
-function format_text($text, $cut_limit=300) {
+function format_text($text, $cut_limit=300) 
+{
     $output = '';
     $text = strip_tags($text);
 
@@ -37,39 +38,40 @@ function format_text($text, $cut_limit=300) {
 /**
 * Функция форматирования даты поста
 **/
-function format_date($date) {
-    $dt_date = date_create($date);
-    $dt_now = date_create('now');
-    $dt_diff = date_diff($dt_date, $dt_now);
-    
-    $days_intrv = date_interval_format($dt_diff, '%a');
-    $hours_intrv = date_interval_format($dt_diff, '%h');
-    $minutes_intrv = date_interval_format($dt_diff, '%i');
+function format_date($date) 
+{
+    $minutes_intrv = floor(strtotime('now') - strtotime($date))/60;
 
-    if ($days_intrv > 35) {
-        $months_intrv = ceil($days_intrv / 31);
-        $output = $months_intrv . get_noun_plural_form($months_intrv, ' месяц', ' месяца', ' месяцев') . ' назад'; 
-    } elseif ($days_intrv > 7) {
-        $weeks_intrv = ceil($days_intrv / 7);
-        $output = $weeks_intrv . get_noun_plural_form($weeks_intrv, ' неделя', ' недели', ' недель') . ' назад'; 
-    } elseif ($days_intrv >= 1) {
-        $output = $days_intrv . get_noun_plural_form($days_intrv, ' день', ' дня', ' дней') . ' назад';         
-    } elseif ($hours_intrv >= 1) {
-        $output = $hours_intrv . get_noun_plural_form($hours_intrv, ' час', ' часа', ' часов') . ' назад';
-    } else {
-        $output = $minutes_intrv . get_noun_plural_form($minutes_intrv, ' минута', ' минуты', ' минут') . ' назад';
+    switch (true) {
+        case ($minutes_intrv < 60) :
+            $output = $minutes_intrv . get_noun_plural_form($minutes_intrv, ' минута', ' минуты', ' минут');
+            break;
+
+        case ($minutes_intrv < 1440) :
+            $output = floor($minutes_intrv / 60) . get_noun_plural_form(floor($minutes_intrv / 60), ' час', ' часа', ' часов');
+            break;
+
+        case ($minutes_intrv < 10080) :
+            $output = floor($minutes_intrv / 1440) . get_noun_plural_form(floor($minutes_intrv / 1440), ' день', ' дня', ' дней');
+            break;
+
+        case ($minutes_intrv < 50400) :
+            $output = floor($minutes_intrv / 10080) . get_noun_plural_form(floor($minutes_intrv / 10080), ' неделя', ' недели', ' недель');
+            break;
+
+        default :
+            $output = floor($minutes_intrv / 43200) . get_noun_plural_form(floor($minutes_intrv / 43200), ' месяц', ' месяца', ' месяцев');
     }
-
-    return $output;
+    
+    return $output . ' назад'; 
 }
 
 /**
 * Функция преобразования формата даты для тега title
 **/
-function format_date_title($date) {
-    $dt_date = date_create($date);
-    $output = date_format($dt_date, 'd.m.Y H:i');
-    return $output;
+function format_date_title($date) 
+{
+    return date_format(date_create($date), 'd.m.Y H:i');
 }
 
 $cards = [

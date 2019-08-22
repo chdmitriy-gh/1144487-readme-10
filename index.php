@@ -40,7 +40,7 @@ function format_text($text, $cut_limit=300)
 **/
 function format_date($date) 
 {
-    $minutes_intrv = floor(strtotime('now') - strtotime($date))/60;
+    $minutes_intrv = floor((strtotime('now') - strtotime($date))/60);
 
     switch (true) {
         case ($minutes_intrv < 60) :

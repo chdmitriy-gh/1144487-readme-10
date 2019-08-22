@@ -1,5 +1,6 @@
 <?php
 require_once('helpers.php');
+date_default_timezone_set('Europe/Moscow');
 
 $is_auth = rand(0, 1);
 $user_name = 'Дмитрий'; // укажите здесь ваше имя
@@ -7,7 +8,8 @@ $user_name = 'Дмитрий'; // укажите здесь ваше имя
 /**
  * функция форматирования текста перед выводом
  **/
-function format_text($text, $cut_limit=300) {
+function format_text($text, $cut_limit=300) 
+{
     $output = '';
     $text = strip_tags($text);
 
@@ -31,6 +33,45 @@ function format_text($text, $cut_limit=300) {
     }
 
     return $output; 
+}
+
+/**
+* Функция форматирования даты поста
+**/
+function format_date($date) 
+{
+    $minutes_intrv = floor((strtotime('now') - strtotime($date))/60);
+
+    switch (true) {
+        case ($minutes_intrv < 60) :
+            $output = $minutes_intrv . get_noun_plural_form($minutes_intrv, ' минута', ' минуты', ' минут');
+            break;
+
+        case ($minutes_intrv < 1440) :
+            $output = floor($minutes_intrv / 60) . get_noun_plural_form(floor($minutes_intrv / 60), ' час', ' часа', ' часов');
+            break;
+
+        case ($minutes_intrv < 10080) :
+            $output = floor($minutes_intrv / 1440) . get_noun_plural_form(floor($minutes_intrv / 1440), ' день', ' дня', ' дней');
+            break;
+
+        case ($minutes_intrv < 50400) :
+            $output = floor($minutes_intrv / 10080) . get_noun_plural_form(floor($minutes_intrv / 10080), ' неделя', ' недели', ' недель');
+            break;
+
+        default :
+            $output = floor($minutes_intrv / 43200) . get_noun_plural_form(floor($minutes_intrv / 43200), ' месяц', ' месяца', ' месяцев');
+    }
+    
+    return $output . ' назад'; 
+}
+
+/**
+* Функция преобразования формата даты для тега title
+**/
+function format_date_title($date) 
+{
+    return date_format(date_create($date), 'd.m.Y H:i');
 }
 
 $cards = [
@@ -81,6 +122,10 @@ $cards = [
         'author-avatar' => 'userpic.jpg'
     ]
 ];
+
+foreach ($cards as $key => $value)  {
+    $cards[$key]['date'] = generate_random_date($key);
+}
 
 $page_content = include_template('main.php', ['cards' => $cards]);
 $layout_content = include_template('layout.php', 

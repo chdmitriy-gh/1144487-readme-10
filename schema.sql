@@ -15,7 +15,7 @@ CREATE TABLE users (
 
 CREATE TABLE types (
     id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(64) NOT NULL,
+    type_name   VARCHAR(64) NOT NULL,
     class       VARCHAR(64) NOT NULL
 );
 

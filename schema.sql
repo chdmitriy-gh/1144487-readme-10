@@ -4,89 +4,84 @@ CREATE DATABASE readme
 USE readme;
 
 CREATE TABLE users (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    dt_add      TIMESTAMP,
-    email       CHAR(128),
-    username    CHAR(64),
-    passw    	 CHAR(64),
-    avatar_path CHAR(255),
-    contacts    CHAR(255)
+    id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    creation_date DATETIME NOT NULL,
+    email       VARCHAR(128) NOT NULL,
+    username    VARCHAR(64),
+    passw    	 VARCHAR(64),
+    avatar_path VARCHAR(255),
+    contacts    VARCHAR(255)
 );
-CREATE UNIQUE INDEX email ON users(email);
-CREATE INDEX username ON users(username);
-
-CREATE TABLE cards (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    dt_add      TIMESTAMP,
-    title       CHAR(255),
-    text_cntnt  TEXT,
-    quote_auth  CHAR(255),
-    photo_path  CHAR(255),
-    video_path  CHAR(255),
-    link_path   CHAR(255),
-    show_count  INT,
-    user_id     INT,
-    type_id     INT
-);
-CREATE INDEX dt_add ON cards(dt_add);
-CREATE INDEX user_id ON cards (user_id);
-CREATE INDEX type_id ON cards (type_id);
-
-CREATE TABLE comments (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    dt_add      TIMESTAMP,
-    content     TEXT,
-    user_id     INT,
-    card_id     INT
-);
-CREATE INDEX dt_add ON comments(dt_add);
-CREATE INDEX user_id ON comments(user_id);
-CREATE INDEX card_id ON comments(card_id);
-
-CREATE TABLE cards_like (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    user_id     INT,
-    card_id     INT
-);
-CREATE INDEX user_id ON cards_like(user_id);
-CREATE INDEX card_id ON cards_like(card_id);
-
-CREATE TABLE subscribes (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    author_id   INT,
-    subscr_id   INT
-);
-CREATE INDEX author_id ON subscribes(author_id);
-CREATE INDEX subscr_id ON subscribes(subscr_id);
-
-CREATE TABLE messages (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    dt_add      TIMESTAMP,
-    content     CHAR(255),
-    sender_id   INT,
-    recip_id    INT
-);
-CREATE INDEX sender_id ON messages(sender_id);
-CREATE INDEX recip_id ON messages(recip_id);
-CREATE INDEX dt_add ON messages(dt_add);
-
-CREATE TABLE hashtags (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    tagname     CHAR(64)
-);
-CREATE UNIQUE INDEX tagname ON hashtags(tagname);
 
 CREATE TABLE types (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    name        CHAR(64),
-    class       CHAR(64)
+    id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(64) NOT NULL,
+    class       VARCHAR(64) NOT NULL
 );
-CREATE UNIQUE INDEX name ON types(name);
+
+CREATE TABLE cards (
+    id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    creation_date DATETIME NOT NULL,
+    title       VARCHAR(255),
+    text_content TEXT,
+    quote_auth  VARCHAR(255),
+    photo_path  VARCHAR(255),
+    video_path  VARCHAR(255),
+    link_path   VARCHAR(255),
+    show_count  INT UNSIGNED,
+    user_id     INT UNSIGNED NOT NULL,
+    type_id     INT UNSIGNED NOT NULL,
+    CONSTRAINT FK_card_user FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT FK_card_type FOREIGN KEY (type_id) REFERENCES types(id)
+);
+CREATE INDEX show_count ON cards(show_count);
+CREATE INDEX text_content ON cards(text_content(64));
+
+CREATE TABLE comments (
+    id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    creation_date DATETIME NOT NULL,
+    content     TEXT,
+    user_id     INT UNSIGNED NOT NULL,
+    card_id     INT UNSIGNED NOT NULL,
+    CONSTRAINT FK_comment_user FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT FK_comment_card FOREIGN KEY (card_id) REFERENCES cards(id)
+);
+
+CREATE TABLE cards_like (
+    id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id     INT UNSIGNED NOT NULL,
+    card_id     INT UNSIGNED NOT NULL,
+    CONSTRAINT FK_like_user FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT FK_like_card FOREIGN KEY (card_id) REFERENCES cards(id)
+);
+
+CREATE TABLE subscribes (
+    id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    author_id   INT UNSIGNED NOT NULL,
+    subscribed_id INT UNSIGNED NOT NULL,
+    CONSTRAINT FK_subscr_author FOREIGN KEY (author_id) REFERENCES users(id),
+    CONSTRAINT FK_subscr_subscribed FOREIGN KEY (subscribed_id) REFERENCES users(id)
+);
+
+CREATE TABLE messages (
+    id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    creation_date DATETIME NOT NULL,
+    content     VARCHAR(255),
+    sender_id   INT UNSIGNED NOT NULL,
+    recipient_id INT UNSIGNED NOT NULL,
+    CONSTRAINT FK_mess_sender FOREIGN KEY (sender_id) REFERENCES users(id),
+    CONSTRAINT FK_mess_recipient FOREIGN KEY (recipient_id) REFERENCES users(id)
+);
+
+CREATE TABLE hashtags (
+    id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    tagname     VARCHAR(64)
+);
 
 CREATE TABLE cards_hashtags (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    hashtag_id  INT,
-    card_id     INT
+    id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    hashtag_id  INT UNSIGNED NOT NULL,
+    card_id     INT UNSIGNED NOT NULL,
+    CONSTRAINT FK_hashtag_card FOREIGN KEY (card_id) REFERENCES cards(id),
+    CONSTRAINT FK_hashtag_hashtag FOREIGN KEY (hashtag_id) REFERENCES hashtags(id)
 );
-CREATE INDEX hashtag_id ON cards_hashtags(hashtag_id);
-CREATE INDEX card_id ON cards_hashtags(card_id);

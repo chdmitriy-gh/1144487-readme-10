@@ -7,8 +7,8 @@ CREATE TABLE users (
     id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     creation_date DATETIME NOT NULL,
     email       VARCHAR(128) NOT NULL,
-    username    VARCHAR(64),
-    passw    	 VARCHAR(64),
+    username    VARCHAR(64) NOT NULL, 
+    passw    	 VARCHAR(64) NOT NULL,
     avatar_path VARCHAR(255),
     contacts    VARCHAR(255)
 );
@@ -22,7 +22,7 @@ CREATE TABLE types (
 CREATE TABLE cards (
     id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     creation_date DATETIME NOT NULL,
-    title       VARCHAR(255),
+    title       VARCHAR(255) NOT NULL,
     text_content TEXT,
     quote_auth  VARCHAR(255),
     photo_path  VARCHAR(255),
@@ -40,7 +40,7 @@ CREATE INDEX text_content ON cards(text_content(64));
 CREATE TABLE comments (
     id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     creation_date DATETIME NOT NULL,
-    content     TEXT,
+    content     TEXT NOT NULL,
     user_id     INT UNSIGNED NOT NULL,
     card_id     INT UNSIGNED NOT NULL,
     CONSTRAINT FK_comment_user FOREIGN KEY (user_id) REFERENCES users(id),
@@ -66,7 +66,7 @@ CREATE TABLE subscribes (
 CREATE TABLE messages (
     id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     creation_date DATETIME NOT NULL,
-    content     VARCHAR(255),
+    content     VARCHAR(255) NOT NULL,
     sender_id   INT UNSIGNED NOT NULL,
     recipient_id INT UNSIGNED NOT NULL,
     CONSTRAINT FK_mess_sender FOREIGN KEY (sender_id) REFERENCES users(id),
@@ -75,7 +75,7 @@ CREATE TABLE messages (
 
 CREATE TABLE hashtags (
     id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    tagname     VARCHAR(64)
+    tagname     VARCHAR(64) NOT NULL
 );
 
 CREATE TABLE cards_hashtags (

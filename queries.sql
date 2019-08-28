@@ -34,8 +34,7 @@ JOIN types ON cards.type_id = types.id
 ORDER BY show_count DESC;
 
 -- Выводит все посты определенного автора
-SET @user_id = (SELECT id FROM users WHERE email = 'larisa@yandex.ru');
-SELECT text_content FROM cards WHERE user_id = @user_id;
+SELECT text_content FROM cards WHERE user_id = @user1_id;
 
 -- Выводит для определенного поста все комментарии с именем комментатора
 SELECT content, username FROM cards

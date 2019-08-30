@@ -73,58 +73,78 @@ function format_date_title($date)
 {
     return date_format(date_create($date), 'd.m.Y H:i');
 }
+/**
+*$cards = [
+*    [
+*        'header' => 'Цитата',
+*        'type' => 'post-quote',
+*        'content' => 'Мы в жизни любим только раз, а после ищем лишь похожих',
+*        'author-name' => 'Лариса',
+*        'author-avatar' => 'userpic-larisa-small.jpg'
+*    ],
+*    [
+*        'header' => 'Игра престолов',
+*        'type' => 'post-text',
+*        'content' => 'Не могу дождаться начала финального сезона своего любимого сериала!',
+*        'author-name' => 'Владик',
+*        'author-avatar' => 'userpic.jpg'
+*    ],
+*    [
+*        'header' => 'Наконец, обработал фотки!',
+*        'type' => 'post-photo',
+*        'content' => 'rock-medium.jpg',
+*        'author-name' => 'Виктор',
+*        'author-avatar' => 'userpic-mark.jpg'
+*    ],
+*    [
+*        'header' => 'Полезный пост про Байкал',
+*        'type' => 'post-text',
+*        'content' => 'Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал 
+*        считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых
+*        Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, –
+*        популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и
+*        собачьих упряжках.',
+*        'author-name' => 'Лариса',
+*        'author-avatar' => 'userpic-larisa-small.jpg'
+*    ],
+*    [
+*        'header' => 'Моя мечта',
+*        'type' => 'post-photo',
+*        'content' => 'coast-medium.jpg',
+*        'author-name' => 'Лариса',
+*        'author-avatar' => 'userpic-larisa-small.jpg'
+*    ],
+*    [
+*        'header' => 'Лучшие курсы',
+*        'type' => 'post-link',
+*        'content' => 'www.htmlacademy.ru',
+*        'author-name' => 'Владик',
+*        'author-avatar' => 'userpic.jpg'
+*    ]
+*];
+*
+*foreach ($cards as $key => $value)  {
+*    $cards[$key]['date'] = generate_random_date($key);
+*}
+**/
 
-$cards = [
-    [
-        'header' => 'Цитата',
-        'type' => 'post-quote',
-        'content' => 'Мы в жизни любим только раз, а после ищем лишь похожих',
-        'author-name' => 'Лариса',
-        'author-avatar' => 'userpic-larisa-small.jpg'
-    ],
-    [
-        'header' => 'Игра престолов',
-        'type' => 'post-text',
-        'content' => 'Не могу дождаться начала финального сезона своего любимого сериала!',
-        'author-name' => 'Владик',
-        'author-avatar' => 'userpic.jpg'
-    ],
-    [
-        'header' => 'Наконец, обработал фотки!',
-        'type' => 'post-photo',
-        'content' => 'rock-medium.jpg',
-        'author-name' => 'Виктор',
-        'author-avatar' => 'userpic-mark.jpg'
-    ],
-    [
-        'header' => 'Полезный пост про Байкал',
-        'type' => 'post-text',
-        'content' => 'Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал 
-        считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых
-        Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, –
-        популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и
-        собачьих упряжках.',
-        'author-name' => 'Лариса',
-        'author-avatar' => 'userpic-larisa-small.jpg'
-    ],
-    [
-        'header' => 'Моя мечта',
-        'type' => 'post-photo',
-        'content' => 'coast-medium.jpg',
-        'author-name' => 'Лариса',
-        'author-avatar' => 'userpic-larisa-small.jpg'
-    ],
-    [
-        'header' => 'Лучшие курсы',
-        'type' => 'post-link',
-        'content' => 'www.htmlacademy.ru',
-        'author-name' => 'Владик',
-        'author-avatar' => 'userpic.jpg'
-    ]
-];
-
-foreach ($cards as $key => $value)  {
-    $cards[$key]['date'] = generate_random_date($key);
+$con = mysqli_connect('localhost', 'root', '', 'readme');
+if (!$con) {
+    print('Ошибка подключения: ' . mysqli_connect_error());
+} else {
+    mysqli_set_charset($con, 'utf8');
+    $sql = 'SELECT cards.id, cards.creation_date, title, text_content, quote_auth, photo_path, video_path, link_path, 
+        show_count, users.username, users.avatar_path, types.class_name, types.type_name FROM cards 
+        JOIN users ON cards.user_id = users.id 
+        JOIN types ON cards.type_id = types.id 
+        ORDER BY show_count DESC LIMIT 6';
+    $res = mysqli_query($con, $sql);
+    if (!$res) {
+        $error = mysqli_error($con);
+        print('Ошибка MySQL: ' . $error);
+    } else {
+        $cards = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    }
 }
 
 $page_content = include_template('main.php', ['cards' => $cards]);

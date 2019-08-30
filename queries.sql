@@ -1,25 +1,34 @@
 -- Заполнение таблицы типов контента
-INSERT INTO types (type_name, class) VALUES 
+INSERT INTO types (type_name, class_name) VALUES 
 	('Текст', 'text'), 
 	('Цитата', 'quote'), 
 	('Картинка', 'photo'), 
 	('Видео', 'video'), 
 	('Ссылка', 'link');
 -- Заполнение таблицы пользователей
-INSERT INTO users (creation_date, email, username, passw) VALUES 
-	(NOW(), 'larisa@yandex.ru', 'Лариса', 'passwlarisa'),
-	(NOW(), 'victor@gmail.com', 'Виктор', 'passwvictor'),
-	(NOW(), 'vladik@mail.ru', 'Владик', 'passwvladik');
+INSERT INTO users (creation_date, email, username, passw, avatar_path) VALUES 
+	(NOW(), 'larisa@yandex.ru', 'Лариса', 'passwlarisa', 'userpic-larisa-small.jpg'),
+	(NOW(), 'victor@gmail.com', 'Виктор', 'passwvictor', 'userpic-mark.jpg'),
+	(NOW(), 'vladik@mail.ru', 'Владик', 'passwvladik', 'userpic.jpg');
 -- Заполнение таблицы постов
 SET @user1_id = (SELECT id FROM users WHERE email = 'larisa@yandex.ru');
 SET @user2_id = (SELECT id FROM users WHERE email = 'victor@gmail.com');
 SET @user3_id = (SELECT id FROM users WHERE email = 'vladik@mail.ru');
-SET @type1 = (SELECT id FROM types WHERE class = 'text');
-SET @type2 = (SELECT id FROM types WHERE class = 'quote');
-INSERT INTO cards (id, creation_date, title, text_content, quote_auth, show_count, user_id, type_id) VALUES
-   (1, NOW(), 'Цитата', 'Мы в жизни любим только раз, а после ищем лишь похожих', 'Неизвестный автор', 10, @user1_id, @type2),
-   (2, NOW(), 'Игра престолов', 'Не могу дождаться начала финального сезона!', NULL, 5, @user2_id, @type1),
-   (3, NOW(), 'Байкал', 'Озеро Байкал – огромное древнее озеро в горах Сибири.', NULL, 3, @user1_id, @type1);
+SET @type1 = (SELECT id FROM types WHERE class_name = 'text');
+SET @type2 = (SELECT id FROM types WHERE class_name = 'quote');
+SET @type3 = (SELECT id FROM types WHERE class_name = 'photo');
+SET @type4 = (SELECT id FROM types WHERE class_name = 'link');
+INSERT INTO cards (id, creation_date, title, text_content, quote_auth, photo_path, link_path, show_count, user_id, type_id) VALUES
+   (1, NOW(), 'Цитата', 'Мы в жизни любим только раз, а после ищем лишь похожих', 'Неизвестный автор', NULL, NULL, 10, @user1_id, @type2),
+   (2, NOW(), 'Игра престолов', 'Не могу дождаться начала финального сезона!', NULL, NULL, NULL, 5, @user2_id, @type1),
+   (3, NOW(), 'Байкал', 'Озеро Байкал – огромное древнее озеро в горах Сибири  к северу от монгольской границы. Байкал 
+        считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых
+        Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, –
+        популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и
+        собачьих упряжках.', NULL, NULL, NULL, 3, @user1_id, @type1),
+   (4, NOW(), 'Наконец, обработал фотки!', NULL, NULL, 'rock-medium.jpg', NULL, 11, @user2_id, @type3),
+   (5, NOW(), 'Моя мечта', NULL, NULL, 'coast-medium.jpg', NULL, 15, @user1_id, @type3),
+   (6, NOW(), 'Лучшие курсы', NULL, NULL, NULL, 'www.htmlacademy.ru', 4, @user3_id, @TYPE4);
 -- Заполнение таблицы комментариев
 INSERT INTO comments (creation_date, content, user_id, card_id) VALUES
 	(NOW(), 'Это якобы Есенин.', @user2_id, 1),

@@ -40,46 +40,21 @@
                             <span>Все</span>
                         </a>
                     </li>
+                    
+                    <?php foreach ($types as $curr_type):?>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--photo button" href="#">
-                            <span class="visually-hidden">Фото</span>
-                            <svg class="filters__icon" width="22" height="18">
-                                <use xlink:href="#icon-filter-photo"></use>
+                        <a class="filters__button filters__button--<?=$curr_type['class_name'];?> button" href="#">
+                            <span class="visually-hidden"><?=$curr_type['type_name'];?></span>
+                            <?php 
+                            $icon_size = type_icon_size($curr_type);
+                            ?>
+                            <svg class="filters__icon" width="<?=$icon_size['width'];?>" height="<?=$icon_size['height'];?>">
+                                <use xlink:href="#icon-filter-<?=$curr_type['class_name'];?>"></use>
                             </svg>
                         </a>
                     </li>
-                    <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--video button" href="#">
-                            <span class="visually-hidden">Видео</span>
-                            <svg class="filters__icon" width="24" height="16">
-                                <use xlink:href="#icon-filter-video"></use>
-                            </svg>
-                        </a>
-                    </li>
-                    <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--text button" href="#">
-                            <span class="visually-hidden">Текст</span>
-                            <svg class="filters__icon" width="20" height="21">
-                                <use xlink:href="#icon-filter-text"></use>
-                            </svg>
-                        </a>
-                    </li>
-                    <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--quote button" href="#">
-                            <span class="visually-hidden">Цитата</span>
-                            <svg class="filters__icon" width="21" height="20">
-                                <use xlink:href="#icon-filter-quote"></use>
-                            </svg>
-                        </a>
-                    </li>
-                    <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--link button" href="#">
-                            <span class="visually-hidden">Ссылка</span>
-                            <svg class="filters__icon" width="21" height="18">
-                                <use xlink:href="#icon-filter-link"></use>
-                            </svg>
-                        </a>
-                    </li>
+                    <?php endforeach; ?>
+                    
                 </ul>
             </div>
         </div>
@@ -87,26 +62,26 @@
         <div class="popular__posts">        
             
         <?php foreach ($cards as $card): ?>    
-            <article class="popular__post post <?=$card['type'];?>"> 
+            <article class="popular__post post post-<?=$card['class_name'];?>"> 
                 <header class="post__header">
-                    <h2><?=strip_tags($card['header']);?></h2>
+                    <h2><?=strip_tags($card['title']);?></h2>
                 </header>
                 <div class="post__main">
-
-                    <?php if ($card['type'] === 'post-quote'): ?>
+                    
+                    <?php if ($card['class_name'] === 'quote'): ?>
                         <blockquote>
                             <p>
-                                <?=strip_tags($card['content']);?>
+                                <?=strip_tags($card['text_content']);?>
                             </p>
-                            <cite>Неизвестный Автор</cite>
+                            <cite><?=strip_tags($card['quote_auth']);?></cite>
                         </blockquote>                     
-                    <?php elseif($card['type'] === 'post-text'): ?> 
-                        <p><?=format_text($card['content']);?></p>                       
-                    <?php elseif($card['type'] === 'post-photo'): ?> 
+                    <?php elseif($card['class_name'] === 'text'): ?> 
+                        <p><?=format_text($card['text_content']);?></p>                       
+                    <?php elseif($card['class_name'] === 'photo'): ?> 
                         <div class="post-photo__image-wrapper">
-                            <img src="img/<?=$card['content'];?>" alt="Фото от пользователя" width="360" height="240">
+                            <img src="img/<?=$card['photo_path'];?>" alt="Фото от пользователя" width="360" height="240">
                         </div>                    
-                    <?php elseif($card['type'] === 'post-link'): ?>
+                    <?php elseif($card['class_name'] === 'link'): ?>
                         <div class="post-link__wrapper">
                             <a class="post-link__external" href="http://" title="Перейти по ссылке">
                             <div class="post-link__info-wrapper">
@@ -114,10 +89,10 @@
                                     <img src="https://www.google.com/s2/favicons?domain=vitadental.ru" alt="Иконка">
                                 </div>
                                 <div class="post-link__info">
-                                    <h3><?=strip_tags($card['header']);?></h3>
+                                    <h3><?=strip_tags($card['title']);?></h3>
                                 </div>
                             </div>
-                            <span><?=$card['content'];?></span>
+                            <span><?=$card['link_path'];?></span>
                             </a>
                         </div>
                     <?php endif; ?>
@@ -127,12 +102,12 @@
                     <div class="post__author">
                         <a class="post__author-link" href="#" title="Автор">
                             <div class="post__avatar-wrapper">
-                                <img class="post__author-avatar" src="img/<?=$card['author-avatar'];?>" alt="Аватар пользователя">
+                                <img class="post__author-avatar" src="img/<?=$card['avatar_path'];?>" alt="Аватар пользователя">
                             </div>
                             <div class="post__info">
-                                <b class="post__author-name"><?=$card['author-name'];?></b>
-                                <time class="post__time" datetime="<?=$card['date'];?>" 
-                                    title="<?=format_date_title($card['date']);?>"> <?=format_date($card['date']);?> 
+                                <b class="post__author-name"><?=$card['username'];?></b>
+                                <time class="post__time" datetime="<?=$card['creation_date'];?>" 
+                                    title="<?=format_date_title($card['creation_date']);?>"> <?=format_date($card['creation_date']);?> 
                                 </time> 
                             </div>
                         </a>

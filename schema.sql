@@ -16,7 +16,7 @@ CREATE TABLE users (
 CREATE TABLE types (
     id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     type_name   VARCHAR(64) NOT NULL,
-    class       VARCHAR(64) NOT NULL
+    class_name  VARCHAR(64) NOT NULL
 );
 
 CREATE TABLE cards (

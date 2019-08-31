@@ -1,6 +1,6 @@
 <?php
 require_once('helpers.php');
-require_once('connect.php');
+require_once('DBConnection.php');
 date_default_timezone_set('Europe/Moscow');
 
 $is_auth = rand(0, 1);
@@ -84,32 +84,20 @@ function type_icon_size($curr_type)
     $icon_size = ['width' => '0', 'height' => '0'];
     switch (true) {
         case ($curr_type['class_name'] === 'photo') :
-            $icon_size['width'] = '22';
-            $icon_size['height'] = '18';
-            break;
-
+            return $icon_size = ['width' => '22', 'height' => '18'];
+            
         case ($curr_type['class_name'] === 'video') :
-            $icon_size['width'] = '24';
-            $icon_size['height'] = '16';
-            break;
-        
+            return $icon_size = ['width' => '24', 'height' => '16'];
+                    
         case ($curr_type['class_name'] === 'text') :
-            $icon_size['width'] = '20';
-            $icon_size['height'] = '21';
-            break;
-
+            return $icon_size = ['width' => '20', 'height' => '21'];
+            
         case ($curr_type['class_name'] === 'quote') :
-            $icon_size['width'] = '21';
-            $icon_size['height'] = '20';
-            break;
-
+            return $icon_size = ['width' => '21', 'height' => '20'];
+            
         case ($curr_type['class_name'] === 'link') :
-            $icon_size['width'] = '21';
-            $icon_size['height'] = '18';
-            break;
+            return $icon_size = ['width' => '21', 'height' => '18'];
     }
-
-    return $icon_size;
 }
 
 

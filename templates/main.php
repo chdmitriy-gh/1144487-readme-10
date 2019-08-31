@@ -1,19 +1,3 @@
-<?php
-$con = mysqli_connect('localhost', 'root', '', 'readme');
-if (!$con) {
-    print('Ошибка подключения: ' . mysqli_connect_error());
-} else {
-    mysqli_set_charset($con, 'utf8');
-    $sql = 'SELECT type_name, class_name FROM types';
-    $res = mysqli_query($con, $sql);
-    if (!$res) {
-        $error = mysqli_error($con);
-        print('Ошибка MySQL: ' . $error);
-    } else {
-        $types = mysqli_fetch_all($res, MYSQLI_ASSOC);
-    }
-}
-?>
     <div class="container">
         <h1 class="page__title page__title--popular">Популярное</h1>
     </div>
@@ -62,34 +46,9 @@ if (!$con) {
                         <a class="filters__button filters__button--<?=$curr_type['class_name'];?> button" href="#">
                             <span class="visually-hidden"><?=$curr_type['type_name'];?></span>
                             <?php 
-                            switch (true) {
-                                case ($curr_type['class_name'] === 'photo') :
-                                    $type_width = '22';
-                                    $type_height = '18';
-                                    break;
-
-                                case ($curr_type['class_name'] === 'video') :
-                                    $type_width = '24';
-                                    $type_height = '16';
-                                    break;
-                                
-                                case ($curr_type['class_name'] === 'text') :
-                                    $type_width = '20';
-                                    $type_height = '21';
-                                    break;
-
-                                case ($curr_type['class_name'] === 'quote') :
-                                    $type_width = '21';
-                                    $type_height = '20';
-                                    break;
-
-                                case ($curr_type['class_name'] === 'link') :
-                                    $type_width = '21';
-                                    $type_height = '18';
-                                    break;
-                            }
+                            $icon_size = type_icon_size($curr_type);
                             ?>
-                            <svg class="filters__icon" width="<?=$type_width;?>" height="<?=$type_height;?>">
+                            <svg class="filters__icon" width="<?=$icon_size['width'];?>" height="<?=$icon_size['height'];?>">
                                 <use xlink:href="#icon-filter-<?=$curr_type['class_name'];?>"></use>
                             </svg>
                         </a>

@@ -1,4 +1,5 @@
 <?php
+
 require_once('helpers.php');
 require_once('DBConnection.php');
 date_default_timezone_set('Europe/Moscow');
@@ -6,6 +7,9 @@ date_default_timezone_set('Europe/Moscow');
 $is_auth = rand(0, 1);
 $user_name = 'Дмитрий'; // укажите здесь ваше имя
 $cards_lim = '6';
+$filter_id = '';
+$filter_sql = '';
+$dirname = pathinfo(__DIR__, PATHINFO_BASENAME);
 
 /**
  * функция форматирования текста перед выводом
@@ -38,50 +42,12 @@ function format_text($text, $cut_limit=300)
 }
 
 /**
-* Функция форматирования даты поста
-**/
-function format_date($date) 
-{
-    $minutes_intrv = floor((strtotime('now') - strtotime($date))/60);
-
-    switch (true) {
-        case ($minutes_intrv < 60) :
-            $output = $minutes_intrv . get_noun_plural_form($minutes_intrv, ' минута', ' минуты', ' минут');
-            break;
-
-        case ($minutes_intrv < 1440) :
-            $output = floor($minutes_intrv / 60) . get_noun_plural_form(floor($minutes_intrv / 60), ' час', ' часа', ' часов');
-            break;
-
-        case ($minutes_intrv < 10080) :
-            $output = floor($minutes_intrv / 1440) . get_noun_plural_form(floor($minutes_intrv / 1440), ' день', ' дня', ' дней');
-            break;
-
-        case ($minutes_intrv < 50400) :
-            $output = floor($minutes_intrv / 10080) . get_noun_plural_form(floor($minutes_intrv / 10080), ' неделя', ' недели', ' недель');
-            break;
-
-        default :
-            $output = floor($minutes_intrv / 43200) . get_noun_plural_form(floor($minutes_intrv / 43200), ' месяц', ' месяца', ' месяцев');
-    }
-    
-    return $output . ' назад'; 
-}
-
-/**
-* Функция преобразования формата даты для тега title
-**/
-function format_date_title($date) 
-{
-    return date_format(date_create($date), 'd.m.Y H:i');
-}
-
-/**
 * Функция определения размера изображения для кнопки фильтра типов контента
 **/
 function type_icon_size($curr_type) 
 {
     $icon_size = ['width' => '0', 'height' => '0'];
+
     switch (true) {
         case ($curr_type['class_name'] === 'photo') :
             return $icon_size = ['width' => '22', 'height' => '18'];
@@ -100,34 +66,42 @@ function type_icon_size($curr_type)
     }
 }
 
-
-$sql = 'SELECT type_name, class_name FROM types';
+$sql = 'SELECT id, type_name, class_name FROM types';
 $res = mysqli_query($con, $sql);
+
 if (!$res) {
     $error = mysqli_error($con);
     print('Ошибка MySQL: ' . $error);
     exit;
 } 
+
 $types = mysqli_fetch_all($res, MYSQLI_ASSOC);
+
+if (isset($_GET['id']) and $_GET['id'] >= 1 and $_GET['id'] <= 5) {
+    $filter_id = $_GET['id'];
+    $filter_sql = sprintf(' WHERE cards.type_id = %s', $filter_id);
+}
 
 $sql = 'SELECT cards.id, cards.creation_date, title, text_content, quote_auth, photo_path, video_path, link_path, 
     show_count, users.username, users.avatar_path, types.class_name, types.type_name FROM cards 
     JOIN users ON cards.user_id = users.id 
-    JOIN types ON cards.type_id = types.id 
-    ORDER BY show_count DESC LIMIT ' . $cards_lim;    
+    JOIN types ON cards.type_id = types.id'. $filter_sql . '
+    ORDER BY show_count DESC LIMIT ' . $cards_lim;
 $res = mysqli_query($con, $sql);
+
 if (!$res) {
     $error = mysqli_error($con);
     print('Ошибка MySQL: ' . $error);
     exit;
 }
+
 $cards = mysqli_fetch_all($res, MYSQLI_ASSOC);
 
 foreach ($cards as $key => $value)  {
     $cards[$key]['creation_date'] = generate_random_date($key);
 }
 
-$page_content = include_template('main.php', ['cards' => $cards, 'types' => $types]);
+$page_content = include_template('main.php', ['cards' => $cards, 'types' => $types, 'dirname' => $dirname, 'filter_id' => $filter_id]);
 $layout_content = include_template('layout.php', 
     ['content' => $page_content, 'user_name' => $user_name, 'page_name' => 'readme: популярное', 'is_auth' => $is_auth]);
 

@@ -36,14 +36,26 @@
                 <b class="popular__filters-caption filters__caption">Тип контента:</b>
                 <ul class="popular__filters-list filters__list">
                     <li class="popular__filters-item popular__filters-item--all filters__item filters__item--all">
-                        <a class="filters__button filters__button--ellipse filters__button--all filters__button--active" href="#">
+                        <?php 
+                            $filter_activator = '';
+                            if ($filter_id === '') {
+                                $filter_activator = 'filters__button--active';
+                            }                            
+                        ?>
+                        <a class="filters__button filters__button--ellipse filters__button--all <?=$filter_activator?>" href="../<?=$dirname?>">
                             <span>Все</span>
                         </a>
                     </li>
                     
                     <?php foreach ($types as $curr_type):?>
+                    <?php 
+                        $filter_activator = '';
+                        if ($curr_type['id'] === $filter_id) {
+                            $filter_activator = 'filters__button--active';
+                        }
+                    ?>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--<?=$curr_type['class_name'];?> button" href="#">
+                        <a class="filters__button filters__button--<?=$curr_type['class_name'];?> <?=$filter_activator?> button" href="?id=<?=$curr_type['id'];?>">
                             <span class="visually-hidden"><?=$curr_type['type_name'];?></span>
                             <?php 
                             $icon_size = type_icon_size($curr_type);
@@ -64,7 +76,9 @@
         <?php foreach ($cards as $card): ?>    
             <article class="popular__post post post-<?=$card['class_name'];?>"> 
                 <header class="post__header">
-                    <h2><?=strip_tags($card['title']);?></h2>
+                    <a href='../<?=$dirname?>/post.php?id=<?=$card['id'];?>'>
+                        <h2><?=strip_tags($card['title']);?></h2>
+                    </a>
                 </header>
                 <div class="post__main">
                     

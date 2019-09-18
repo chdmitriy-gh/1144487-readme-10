@@ -8,8 +8,6 @@ $is_auth = rand(0, 1);
 $user_name = 'Дмитрий'; // укажите здесь ваше имя
 $cards_lim = '6';
 $filter_id = '';
-$filter_sql = '';
-$dirname = pathinfo(__DIR__, PATHINFO_BASENAME);
 
 /**
  * функция форматирования текста перед выводом
@@ -69,39 +67,35 @@ function type_icon_size($curr_type)
 $sql = 'SELECT id, type_name, class_name FROM types';
 $res = mysqli_query($con, $sql);
 
-if (!$res) {
-    $error = mysqli_error($con);
-    print('Ошибка MySQL: ' . $error);
-    exit;
+if (is_sql_ok($res)) {
+    $types = mysqli_fetch_all($res, MYSQLI_ASSOC);    
 } 
 
-$types = mysqli_fetch_all($res, MYSQLI_ASSOC);
-
-if (isset($_GET['id']) and $_GET['id'] >= 1 and $_GET['id'] <= 5) {
-    $filter_id = $_GET['id'];
-    $filter_sql = sprintf(' WHERE cards.type_id = %s', $filter_id);
+if (isset($_GET['id'])) {
+    $filter_id = $_GET['id'];    
+    $sql = 'SELECT cards.id, cards.creation_date, title, text_content, quote_auth, photo_path, video_path, link_path, 
+        show_count, users.username, users.avatar_path, types.class_name, types.type_name FROM cards 
+        JOIN users ON cards.user_id = users.id 
+        JOIN types ON cards.type_id = types.id WHERE cards.type_id = ' . $filter_id . '
+        ORDER BY show_count DESC LIMIT ' . $cards_lim;
+} else {
+    $sql = 'SELECT cards.id, cards.creation_date, title, text_content, quote_auth, photo_path, video_path, link_path, 
+        show_count, users.username, users.avatar_path, types.class_name, types.type_name FROM cards 
+        JOIN users ON cards.user_id = users.id 
+        JOIN types ON cards.type_id = types.id ORDER BY show_count DESC LIMIT ' . $cards_lim;
 }
 
-$sql = 'SELECT cards.id, cards.creation_date, title, text_content, quote_auth, photo_path, video_path, link_path, 
-    show_count, users.username, users.avatar_path, types.class_name, types.type_name FROM cards 
-    JOIN users ON cards.user_id = users.id 
-    JOIN types ON cards.type_id = types.id'. $filter_sql . '
-    ORDER BY show_count DESC LIMIT ' . $cards_lim;
 $res = mysqli_query($con, $sql);
 
-if (!$res) {
-    $error = mysqli_error($con);
-    print('Ошибка MySQL: ' . $error);
-    exit;
+if (is_sql_ok($res)) {
+    $cards = mysqli_fetch_all($res, MYSQLI_ASSOC);    
 }
-
-$cards = mysqli_fetch_all($res, MYSQLI_ASSOC);
 
 foreach ($cards as $key => $value)  {
     $cards[$key]['creation_date'] = generate_random_date($key);
 }
 
-$page_content = include_template('main.php', ['cards' => $cards, 'types' => $types, 'dirname' => $dirname, 'filter_id' => $filter_id]);
+$page_content = include_template('main.php', ['cards' => $cards, 'types' => $types, 'filter_id' => $filter_id]);
 $layout_content = include_template('layout.php', 
     ['content' => $page_content, 'user_name' => $user_name, 'page_name' => 'readme: популярное', 'is_auth' => $is_auth]);
 

@@ -298,3 +298,16 @@ function format_date_title($date)
 {
     return date_format(date_create($date), 'd.m.Y H:i');
 }
+
+/**
+ * функция прерывания в случае ошибки SQL
+ **/
+function is_sql_ok($res) {
+    if (!$res) {
+        $error = mysqli_error($con);
+        print('Ошибка MySQL: ' . $error);
+        exit;
+    } else {
+        return true;
+    }
+}

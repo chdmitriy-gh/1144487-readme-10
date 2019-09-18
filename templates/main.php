@@ -42,7 +42,7 @@
                                 $filter_activator = 'filters__button--active';
                             }                            
                         ?>
-                        <a class="filters__button filters__button--ellipse filters__button--all <?=$filter_activator?>" href="../<?=$dirname?>">
+                        <a class="filters__button filters__button--ellipse filters__button--all <?=$filter_activator?>" href="../<?=dirname?>">
                             <span>Все</span>
                         </a>
                     </li>
@@ -76,7 +76,7 @@
         <?php foreach ($cards as $card): ?>    
             <article class="popular__post post post-<?=$card['class_name'];?>"> 
                 <header class="post__header">
-                    <a href='../<?=$dirname?>/post.php?id=<?=$card['id'];?>'>
+                    <a href='../<?=dirname?>/post.php?id=<?=$card['id'];?>'>
                         <h2><?=strip_tags($card['title']);?></h2>
                     </a>
                 </header>

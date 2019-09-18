@@ -1,19 +1,19 @@
   <div class="container">
-    <h1 class="page__title page__title--publication"><?=$card[0]['title']?></h1>
+    <h1 class="page__title page__title--publication"><?=$card['title']?></h1>
     <section class="post-details">
       <h2 class="visually-hidden">Публикация</h2>
-      <div class="post-details__wrapper post-<?=$card[0]['class_name']?>">
+      <div class="post-details__wrapper post-<?=$card['class_name']?>">
         <div class="post-details__main-block post post--details">
 
           <?php
-            $post_script_name = $card[0]['class_name'] . '.php';
+            $post_script_name = $card['class_name'] . '.php';
             $post_content = include_template($post_script_name, [
-              'text' => $card[0]['text_content'], 
-              'author' => $card[0]['quote_auth'], 
-              'url' => $card[0]['link_path'], 
-              'title' => $card[0]['title'],
-              'umg_url' => 'img/' . $card[0]['photo_path'],
-              'youtube_url' => $card[0]['video_path']]);
+              'text' => $card['text_content'], 
+              'author' => $card['quote_auth'], 
+              'url' => $card['link_path'], 
+              'title' => $card['title'],
+              'umg_url' => 'img/' . $card['photo_path'],
+              'youtube_url' => $card['video_path']]);
             print($post_content);
           ?>
 
@@ -87,7 +87,7 @@
               </ul>
               <a class="comments__more-link" href="#">
                 <span>Показать все комментарии</span>
-                <sup class="comments__amount"><?=$comments_num[0]['comments_num'];?></sup>
+                <sup class="comments__amount"><?=$comments_num;?></sup>
               </a>
             </div>
           </div>
@@ -96,23 +96,23 @@
           <div class="post-details__user-info user__info">
             <div class="post-details__avatar user__avatar">
               <a class="post-details__avatar-link user__avatar-link" href="#">
-                <img class="post-details__picture user__picture" src="img/<?=$card[0]['avatar_path'];?>" alt="Аватар пользователя">
+                <img class="post-details__picture user__picture" src="img/<?=$card['avatar_path'];?>" alt="Аватар пользователя">
               </a>
             </div>
             <div class="post-details__name-wrapper user__name-wrapper">
               <a class="post-details__name user__name" href="#">
-                <span><?=$card[0]['username'];?></span>
+                <span><?=$card['username'];?></span>
               </a>
               <time class="post-details__time user__time" datetime="2014-03-20"><?=$years_on_site;?> на сайте</time>
             </div>
           </div>
           <div class="post-details__rating user__rating">
             <p class="post-details__rating-item user__rating-item user__rating-item--subscribers">
-              <span class="post-details__rating-amount user__rating-amount"><?=$subscr_num[0]['subscr_num']?></span>
+              <span class="post-details__rating-amount user__rating-amount"><?=$subscr_num;?></span>
               <span class="post-details__rating-text user__rating-text">подписчиков</span>
             </p>
             <p class="post-details__rating-item user__rating-item user__rating-item--publications">
-              <span class="post-details__rating-amount user__rating-amount"><?=$publ_num[0]['publ_num']?></span>
+              <span class="post-details__rating-amount user__rating-amount"><?=$publ_num?></span>
               <span class="post-details__rating-text user__rating-text">публикаций</span>
             </p>
           </div>

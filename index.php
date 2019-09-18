@@ -72,7 +72,7 @@ if (is_sql_ok($res)) {
 } 
 
 if (isset($_GET['id'])) {
-    $filter_id = $_GET['id'];    
+    $filter_id = intval($_GET['id']);
     $sql = 'SELECT cards.id, cards.creation_date, title, text_content, quote_auth, photo_path, video_path, link_path, 
         show_count, users.username, users.avatar_path, types.class_name, types.type_name FROM cards 
         JOIN users ON cards.user_id = users.id 

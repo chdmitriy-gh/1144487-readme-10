@@ -50,7 +50,7 @@
                     <?php foreach ($types as $curr_type):?>
                     <?php 
                         $filter_activator = '';
-                        if ($curr_type['id'] === $filter_id) {
+                        if ($curr_type['id'] == $filter_id) {
                             $filter_activator = 'filters__button--active';
                         }
                     ?>

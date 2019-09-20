@@ -259,3 +259,55 @@ function generate_random_date($index)
 
     return $dt;
 }
+
+/**
+* Функция форматирования даты поста
+**/
+function format_date($date) 
+{
+    $minutes_intrv = floor((strtotime('now') - strtotime($date))/60);
+
+    switch (true) {
+        case ($minutes_intrv < 60) :
+            $output = $minutes_intrv . get_noun_plural_form($minutes_intrv, ' минута', ' минуты', ' минут');
+            break;
+
+        case ($minutes_intrv < 1440) :
+            $output = floor($minutes_intrv / 60) . get_noun_plural_form(floor($minutes_intrv / 60), ' час', ' часа', ' часов');
+            break;
+
+        case ($minutes_intrv < 10080) :
+            $output = floor($minutes_intrv / 1440) . get_noun_plural_form(floor($minutes_intrv / 1440), ' день', ' дня', ' дней');
+            break;
+
+        case ($minutes_intrv < 50400) :
+            $output = floor($minutes_intrv / 10080) . get_noun_plural_form(floor($minutes_intrv / 10080), ' неделя', ' недели', ' недель');
+            break;
+
+        default :
+            $output = floor($minutes_intrv / 43200) . get_noun_plural_form(floor($minutes_intrv / 43200), ' месяц', ' месяца', ' месяцев');
+    }
+    
+    return $output . ' назад'; 
+}
+
+/**
+* Функция преобразования формата даты для тега title
+**/
+function format_date_title($date) 
+{
+    return date_format(date_create($date), 'd.m.Y H:i');
+}
+
+/**
+ * функция прерывания в случае ошибки SQL
+ **/
+function is_sql_ok($res) {
+    if (!$res) {
+        $error = mysqli_error($con);
+        print('Ошибка MySQL: ' . $error);
+        exit;
+    } else {
+        return true;
+    }
+}

@@ -1,5 +1,7 @@
 <?php
-define('db_host', 'localhost');
-define('db_user', 'root');
+
+define('db_host', '');
+define('db_user', '');
 define('db_passw', '');
-define('db_name', 'readme');
+define('db_name', '');
+define('dirname', '1144487-readme-10');

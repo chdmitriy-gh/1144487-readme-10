@@ -72,20 +72,22 @@ if (is_sql_ok($res)) {
 } 
 
 if (isset($_GET['id'])) {
-    $filter_id = intval($_GET['id']);
+    $filter_id = $_GET['id'];
     $sql = 'SELECT cards.id, cards.creation_date, title, text_content, quote_auth, photo_path, video_path, link_path, 
         show_count, users.username, users.avatar_path, types.class_name, types.type_name FROM cards 
         JOIN users ON cards.user_id = users.id 
-        JOIN types ON cards.type_id = types.id WHERE cards.type_id = ' . $filter_id . '
-        ORDER BY show_count DESC LIMIT ' . $cards_lim;
+        JOIN types ON cards.type_id = types.id WHERE cards.type_id = ? ORDER BY show_count DESC LIMIT ' . $cards_lim;
+        $res = mysqli_prepare($con, $sql);
+        $stmt = db_get_prepare_stmt($con, $sql, [$_GET['id']]);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
 } else {
     $sql = 'SELECT cards.id, cards.creation_date, title, text_content, quote_auth, photo_path, video_path, link_path, 
         show_count, users.username, users.avatar_path, types.class_name, types.type_name FROM cards 
         JOIN users ON cards.user_id = users.id 
         JOIN types ON cards.type_id = types.id ORDER BY show_count DESC LIMIT ' . $cards_lim;
+        $res = mysqli_query($con, $sql);
 }
-
-$res = mysqli_query($con, $sql);
 
 if (is_sql_ok($res)) {
     $cards = mysqli_fetch_all($res, MYSQLI_ASSOC);    
